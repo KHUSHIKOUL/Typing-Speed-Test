@@ -1,21 +1,24 @@
-const CACHE_NAME = "typing-speed-cache-v1";
-const urlsToCache = [
-    "index.html",
-    "manifest.json",
-    "script.js",
-    "styles.css"
-];
-
-self.addEventListener("install", event => {
+self.addEventListener("install", (event) => {
+    console.log("Service Worker Installed");
     event.waitUntil(
-        caches.open(CACHE_NAME)
-        .then(cache => cache.addAll(urlsToCache))
+        caches.open("typing-test-cache").then((cache) => {
+            return cache.addAll([
+                "/",
+                "/index.html",
+                "/manifest.json",
+                "/style.css",
+                "/script.js",
+                "/icon-192x192.png",
+                "/icon-512x512.png"
+            ]);
+        })
     );
 });
 
-self.addEventListener("fetch", event => {
+self.addEventListener("fetch", (event) => {
     event.respondWith(
-        caches.match(event.request)
-        .then(response => response || fetch(event.request))
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
     );
 });
